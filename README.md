@@ -93,7 +93,9 @@ cargo build --release && /usr/bin/time -pv target/release/parquet-example-rs --o
 ![page.png](doc/page.png)
 
 # Memory profiler
+
 ## Page
+
 ```bash
 ➜  parquet-example-rs git:(main) ✗ cargo run --features dhat-heap -- --output-parquet-folder output --rows 1000 --statistics-mode page
 
@@ -108,7 +110,9 @@ dhat: At t-gmax: 633,170,308 bytes in 6,748 blocks
 dhat: At t-end:  2,503 bytes in 19 blocks
 dhat: The data has been saved to dhat-heap.json, and is viewable with dhat/dh_view.html
 ```
+
 ## None
+
 ```bash
 ➜  parquet-example-rs git:(main) ✗ cargo run --features dhat-heap -- --output-parquet-folder output --rows 1000 --statistics-mode none
 
