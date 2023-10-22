@@ -6,8 +6,8 @@ use rand::{Rng, SeedableRng};
 use std::fs::File;
 use std::path::Path;
 use std::sync::Arc;
-use std::{env, fs};
 use std::time::Instant;
+use std::{env, fs};
 
 use crate::columns_builder::{ColumnsBuilder, LidarPointCloud, LidarPointCloudColumnsBuilder};
 use crate::schema::LIDAR_POINT_CLOUD_FIELDS;
@@ -47,7 +47,7 @@ struct AppArgs {
 
 fn main() {
     #[cfg(feature = "dhat-heap")]
-        let _profiler = dhat::Profiler::builder().trim_backtraces(Some(30)).build();
+    let _profiler = dhat::Profiler::builder().trim_backtraces(Some(30)).build();
 
     let t: Instant = Instant::now();
 
@@ -68,9 +68,9 @@ fn main() {
     let partition_id: usize = 0;
 
     let enabled_statistics = match &args.statistics_mode {
-        StatisticsMode::None => { EnabledStatistics::None }
-        StatisticsMode::Chunk => { EnabledStatistics::Chunk }
-        StatisticsMode::Page => { EnabledStatistics::Page }
+        StatisticsMode::None => EnabledStatistics::None,
+        StatisticsMode::Chunk => EnabledStatistics::Chunk,
+        StatisticsMode::Page => EnabledStatistics::Page,
     };
 
     let parquet_schema = Schema::new(LIDAR_POINT_CLOUD_FIELDS.clone());
@@ -84,7 +84,10 @@ fn main() {
         // Limit MAX ROW GROUP SIZE
         .set_max_row_group_size(100)
         .build();
-    let output_parquet_path = format!("{}/{partition_id}_{:?}.parquet", args.output_parquet_folder, args.statistics_mode);
+    let output_parquet_path = format!(
+        "{}/{partition_id}_{:?}.parquet",
+        args.output_parquet_folder, args.statistics_mode
+    );
     let file = File::create(output_parquet_path).unwrap();
 
     let mut wrt = ArrowWriter::try_new(file, arrow_schema.clone(), Some(parquet_props)).unwrap();
@@ -100,23 +103,19 @@ fn main() {
     ]);
     let num_points: usize = 250000;
 
-    for i in 1..args.rows+1 {
-        let x: Vec<f32> = (1..num_points)
+    for i in 1..args.rows + 1 {
+        let x: Vec<f32> = (0..num_points)
             .map(|_| rng.gen_range(0.0f32..200.0f32))
             .collect();
-        let y = (1..num_points)
+        let y = (0..num_points)
             .map(|_| rng.gen_range(0.0f32..200.0f32))
             .collect();
-        let z = (1..num_points)
+        let z = (0..num_points)
             .map(|_| rng.gen_range(0.0f32..200.0f32))
             .collect();
 
-        let intensity = (1..num_points)
-            .map(|_| rng.gen_range(0u8..255u8))
-            .collect();
-        let ring = (1..num_points)
-            .map(|_| rng.gen_range(0u8..255u8))
-            .collect();
+        let intensity = (0..num_points).map(|_| rng.gen_range(0u8..255u8)).collect();
+        let ring = (0..num_points).map(|_| rng.gen_range(0u8..255u8)).collect();
 
         let lidar_point_row = LidarPointCloud {
             timestamp: i as u64,
